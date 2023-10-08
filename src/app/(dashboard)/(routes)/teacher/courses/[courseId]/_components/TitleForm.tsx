@@ -3,13 +3,14 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
-import Link from 'next/link'
+import { Pencil } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
 import FormSubmit from '@/components/FormSubmit'
-import { buttonVariants } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -21,6 +22,11 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
+import { CourseType } from '@/types/courseTypes'
+
+type TitleFormProps = {
+  initialData: CourseType
+}
 
 const formSchema = z.object({
   title: z.string().min(3, {
@@ -28,104 +34,114 @@ const formSchema = z.object({
   }),
 })
 
-const CreatePage = () => {
+const TitleForm = (props: TitleFormProps) => {
   const router = useRouter()
   const { toast } = useToast()
+
+  const [isEditing, setIsEditing] = useState<boolean>(false)
+
+  const handleToggle = () => setIsEditing((prev) => !prev)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: '',
+      title: props.initialData?.title,
     },
   })
 
   const { isValid } = form.formState
 
-  const { mutate: createCourse, isLoading } = useMutation(
+  const { mutate: updateCourse, isLoading } = useMutation(
     async (values: z.infer<typeof formSchema>) => {
-      const { data } = await axios.post('/api/courses', values)
+      const { data } = await axios.patch(
+        `/api/courses/${props.initialData?.id}`,
+        values,
+      )
       return data
     },
     {
-      onSuccess: (data) => {
-        router.push(`/teacher/courses/${data.id}`)
+      onSuccess: () => {
+        router.refresh()
         toast({
-          title: 'Course created',
-          description: 'Your course has been created successfully.',
+          title: 'Course updated',
+          description: 'Your course has been updated successfully.',
           variant: 'success',
           duration: 4000,
           draggable: true,
         })
+        handleToggle()
       },
       onError: () => {
         toast({
-          title: 'An error occurred',
-          description: "We couldn't create your course. Please try again.",
+          title: 'Error',
+          description: 'Something went wrong.',
           variant: 'destructive',
           duration: 4000,
           draggable: true,
         })
       },
-      onSettled: () => {
-        form.reset()
-      },
     },
   )
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    createCourse(values)
+    updateCourse(values)
   }
 
   return (
-    <div className="mx-auto flex h-full max-w-5xl p-6 md:items-center md:justify-center">
-      <div className="">
-        <h1 className="text-2xl">Name your course</h1>
-        <p className="text-sm text-slate-600">
-          What would you like to name your course? Don&apos;t worry, you can
-          change this later.
-        </p>
-
+    <div className="mt-6 rounded-md bg-slate-100/70 p-4">
+      <div className="flex items-center justify-between font-medium">
+        Course title
+        <Button variant="ghost" onClick={handleToggle}>
+          {isEditing ? (
+            <>Cancel</>
+          ) : (
+            !isEditing && (
+              <>
+                <Pencil className="mr-2 h-4 w-4" />
+                Edit title
+              </>
+            )
+          )}
+        </Button>
+      </div>
+      {!isEditing && <p className="mt-2 text-sm">{props.initialData?.title}</p>}
+      {isEditing && (
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="mt-8 space-y-8"
+            className="mt-4 space-y-4"
           >
             <FormField
               control={form.control}
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Course title</FormLabel>
+                  <FormLabel>
+                    What would you like to rename your course?
+                  </FormLabel>
                   <FormControl>
                     <Input
-                      disabled={isLoading}
-                      placeholder='e.g. "Advanced web development"'
+                      disabled={isLoading || !isEditing}
+                      placeholder="e.g. 'Advanced web development'"
                       {...field}
                     />
                   </FormControl>
                   <FormDescription>
-                    What will you teach in this course?
+                    Don&apos;t worry, you can change this at any time.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
             <div className="flex items-center gap-x-2">
-              <Link
-                href="/"
-                className={buttonVariants({
-                  variant: 'ghost',
-                })}
-              >
-                Cancel
-              </Link>
-              <FormSubmit isValid={isValid} isLoading={isLoading} />
+              <FormSubmit isValid={isValid} isLoading={isLoading} isEditing />
             </div>
           </form>
         </Form>
-      </div>
+      )}
     </div>
   )
 }
 
-export default CreatePage
+export default TitleForm
