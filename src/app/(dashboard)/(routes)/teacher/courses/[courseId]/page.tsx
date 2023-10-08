@@ -3,6 +3,7 @@ import { LayoutDashboard } from 'lucide-react'
 import { redirect } from 'next/navigation'
 
 import DescriptionForm from './_components/DescriptionForm'
+import ImageForm from './_components/ImageForm'
 import TitleForm from './_components/TitleForm'
 
 import IconBadge from '@/components/IconBadge'
@@ -44,7 +45,11 @@ const CourseIdPage = async ({
         <div className="flex flex-col gap-y-2">
           <h1 className="text-2xl font-medium">Course Setup</h1>
           <span className="text-sm text-slate-700">
-            Complete all fields to publish your course {completionText}.
+            {totalFields === completedFields ? (
+              <>Your course is ready to be published.</>
+            ) : (
+              <>Complete all fields to publish your course {completionText}. </>
+            )}
           </span>
         </div>
       </div>
@@ -57,6 +62,7 @@ const CourseIdPage = async ({
           </div>
           <TitleForm initialData={course} />
           <DescriptionForm initialData={course} />
+          <ImageForm initialData={course} />
         </div>
       </div>
     </div>

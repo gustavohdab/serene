@@ -1,6 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Course } from '@prisma/client'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import { Pencil } from 'lucide-react'
@@ -23,10 +24,9 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/components/ui/use-toast'
 import { cn } from '@/lib/utils'
-import { CourseType } from '@/types/courseTypes'
 
 type DescriptionFormProps = {
-  initialData: CourseType
+  initialData: Course
 }
 
 const formSchema = z.object({
