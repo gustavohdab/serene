@@ -3,6 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
+import { Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
@@ -38,16 +39,23 @@ const CreatePage = () => {
     },
   })
 
-  const { isSubmitting, isValid } = form.formState
+  const { isValid } = form.formState
 
-  const { mutate: createCourse } = useMutation(
+  const { mutate: createCourse, isLoading } = useMutation(
     async (values: z.infer<typeof formSchema>) => {
       const { data } = await axios.post('/api/courses', values)
       return data
     },
     {
       onSuccess: (data) => {
-        router.push(`/courses/${data.id}`)
+        router.push(`/teacher/courses/${data.id}`)
+        toast({
+          title: 'Course created',
+          description: 'Your course has been created successfully.',
+          variant: 'success',
+          duration: 4000,
+          draggable: true,
+        })
       },
       onError: () => {
         toast({
@@ -90,7 +98,7 @@ const CreatePage = () => {
                   <FormLabel>Course title</FormLabel>
                   <FormControl>
                     <Input
-                      disabled={isSubmitting}
+                      disabled={isLoading}
                       placeholder='e.g. "Advanced web development"'
                       {...field}
                     />
@@ -111,8 +119,15 @@ const CreatePage = () => {
               >
                 Cancel
               </Link>
-              <Button type="submit" disabled={!isValid || isSubmitting}>
-                Continue
+              <Button type="submit" disabled={!isValid || isLoading}>
+                {isLoading ? (
+                  <div className="flex items-center gap-x-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Redirecting...
+                  </div>
+                ) : (
+                  'Continue'
+                )}
               </Button>
             </div>
           </form>
