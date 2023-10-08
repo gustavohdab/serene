@@ -97,6 +97,7 @@ const ImageForm = (props: ImageFormProps) => {
               alt={props.initialData.title}
               fill
               className="rounded-md object-cover"
+              priority
             />
           </div>
         ))}

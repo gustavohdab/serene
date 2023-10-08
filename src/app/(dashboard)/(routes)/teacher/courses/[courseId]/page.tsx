@@ -2,6 +2,7 @@ import { auth } from '@clerk/nextjs'
 import { LayoutDashboard } from 'lucide-react'
 import { redirect } from 'next/navigation'
 
+import CategoryForm from './_components/CategoryForm'
 import DescriptionForm from './_components/DescriptionForm'
 import ImageForm from './_components/ImageForm'
 import TitleForm from './_components/TitleForm'
@@ -21,6 +22,12 @@ const CourseIdPage = async ({
   const course = await prisma.course.findUnique({
     where: {
       id: params.courseId,
+    },
+  })
+
+  const categories = await prisma.category.findMany({
+    orderBy: {
+      name: 'asc',
     },
   })
 
@@ -63,6 +70,13 @@ const CourseIdPage = async ({
           <TitleForm initialData={course} />
           <DescriptionForm initialData={course} />
           <ImageForm initialData={course} />
+          <CategoryForm
+            initialData={course}
+            options={categories.map((category) => ({
+              label: category.name,
+              value: category.id,
+            }))}
+          />
         </div>
       </div>
     </div>
