@@ -1,7 +1,12 @@
-import { auth } from '@clerk/nextjs'
-import { CircleDollarSign, LayoutDashboard, ListChecks } from 'lucide-react'
+import {
+  CircleDollarSign,
+  File,
+  LayoutDashboard,
+  ListChecks,
+} from 'lucide-react'
 import { redirect } from 'next/navigation'
 
+import AttachmentForm from './_components/AttachmentForm'
 import CategoryForm from './_components/CategoryForm'
 import DescriptionForm from './_components/DescriptionForm'
 import ImageForm from './_components/ImageForm'
@@ -18,11 +23,16 @@ const CourseIdPage = async ({
     courseId: string
   }
 }) => {
-  const { userId } = auth()
-
   const course = await prisma.course.findUnique({
     where: {
       id: params.courseId,
+    },
+    include: {
+      attachments: {
+        orderBy: {
+          createdAt: 'desc',
+        },
+      },
     },
   })
 
@@ -96,6 +106,12 @@ const CourseIdPage = async ({
             </div>
             <PriceForm initialData={course} />
           </div>
+
+          <div className="flex items-center gap-x-2">
+            <IconBadge icon={File} />
+            <h2 className="text-xl">Resources &amp; Attachments</h2>
+          </div>
+          <AttachmentForm initialData={course} />
         </div>
       </div>
     </div>
