@@ -4,11 +4,13 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Chapter, Course } from '@prisma/client'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
-import { PlusCircle } from 'lucide-react'
+import { Loader2, PlusCircle } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
+
+import ChaptersList from './ChaptersList'
 
 import FormSubmit from '@/components/FormSubmit'
 import { Button } from '@/components/ui/button'
@@ -39,10 +41,10 @@ const ChaptersForm = (props: ChaptersFormProps) => {
   const router = useRouter()
   const { toast } = useToast()
 
-  const [isCreating, setIsCreating] = useState<boolean>(false)
+  // State hooks
+  const [isOpen, setIsOpen] = useState<boolean>(false)
 
-  const handleToggle = () => setIsCreating((prev) => !prev)
-
+  // Form hooks
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -52,6 +54,7 @@ const ChaptersForm = (props: ChaptersFormProps) => {
 
   const { isValid } = form.formState
 
+  // Mutation hooks
   const { mutate: updateCourse, isLoading } = useMutation(
     async (values: z.infer<typeof formSchema>) => {
       const { data } = await axios.post(
@@ -81,19 +84,65 @@ const ChaptersForm = (props: ChaptersFormProps) => {
           draggable: true,
         })
       },
+      onSettled: () => {
+        form.reset()
+      },
     },
   )
+
+  const { mutate: onReorder, isLoading: isReordering } = useMutation(
+    async (updateData: { id: string; position: number }[]) => {
+      await axios.put(
+        `/api/courses/${props.initialData?.id}/chapters/reorder`,
+        {
+          list: updateData,
+        },
+      )
+    },
+    {
+      onSuccess: () => {
+        toast({
+          title: 'Chapters reordered.',
+          description: 'Your chapters have been reordered.',
+          variant: 'success',
+          duration: 4000,
+          draggable: true,
+        })
+      },
+      onError: () => {
+        toast({
+          title: 'Something went wrong.',
+          description: 'Could not reorder chapters. Please try again.',
+          variant: 'destructive',
+          duration: 4000,
+          draggable: true,
+        })
+      },
+    },
+  )
+
+  // Handlers
+  const handleToggle = () => setIsOpen((prev) => !prev)
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     updateCourse(values)
   }
 
+  const onEdit = (id: string) => {
+    router.push(`/teacher/courses/${props.initialData.id}/chapters/${id}`)
+  }
+
   return (
-    <div className="mt-6 rounded-md bg-slate-100/70 p-4">
+    <div className="relative mt-6 rounded-md bg-slate-100/70 p-4">
+      {isReordering && (
+        <div className="absolute right-0 top-0 flex h-full w-full items-center justify-center rounded-md bg-slate-500/20">
+          <Loader2 className="h-6 w-6 animate-spin to-sky-700" />
+        </div>
+      )}
       <div className="flex items-center justify-between font-medium">
         Course chapters
         <Button variant="ghost" onClick={handleToggle}>
-          {isCreating ? (
+          {isOpen ? (
             <>Cancel</>
           ) : (
             <>
@@ -103,7 +152,7 @@ const ChaptersForm = (props: ChaptersFormProps) => {
           )}
         </Button>
       </div>
-      {isCreating && (
+      {isOpen && (
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -117,7 +166,7 @@ const ChaptersForm = (props: ChaptersFormProps) => {
                   <FormLabel>Chapter title</FormLabel>
                   <FormControl>
                     <Input
-                      disabled={isLoading || !isCreating}
+                      disabled={isLoading || !isOpen}
                       placeholder="e.g. 'Introduction to Next.js 13'"
                       {...field}
                     />
@@ -136,7 +185,7 @@ const ChaptersForm = (props: ChaptersFormProps) => {
           </form>
         </Form>
       )}
-      {!isCreating && (
+      {!isOpen && (
         <div
           className={cn(
             'mt-2 text-sm',
@@ -145,10 +194,14 @@ const ChaptersForm = (props: ChaptersFormProps) => {
         >
           {!props.initialData.chapters.length &&
             "Your course doesn't have any chapters yet."}
-          {/** TODO - Add reorder */}
+          <ChaptersList
+            onEdit={onEdit}
+            onReorder={onReorder}
+            items={props.initialData.chapters || []}
+          />
         </div>
       )}
-      {!isCreating && (
+      {!isOpen && (
         <p className="mt-4 text-xs text-muted-foreground">
           Drag and drop to reorder chapters.
         </p>
