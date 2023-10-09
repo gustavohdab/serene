@@ -1,3 +1,4 @@
+import { auth } from '@clerk/nextjs'
 import {
   CircleDollarSign,
   File,
@@ -8,6 +9,7 @@ import { redirect } from 'next/navigation'
 
 import AttachmentForm from './_components/AttachmentForm'
 import CategoryForm from './_components/CategoryForm'
+import ChaptersForm from './_components/ChaptersForm'
 import DescriptionForm from './_components/DescriptionForm'
 import ImageForm from './_components/ImageForm'
 import PriceForm from './_components/PriceForm'
@@ -23,11 +25,21 @@ const CourseIdPage = async ({
     courseId: string
   }
 }) => {
+  const { userId } = auth()
+
+  if (!userId) redirect('/')
+
   const course = await prisma.course.findUnique({
     where: {
       id: params.courseId,
+      userId,
     },
     include: {
+      chapters: {
+        orderBy: {
+          position: 'asc',
+        },
+      },
       attachments: {
         orderBy: {
           createdAt: 'desc',
@@ -50,6 +62,7 @@ const CourseIdPage = async ({
     course.imageUrl,
     course.price,
     course.categoryId,
+    course.chapters.some((chapter) => chapter.isPublished),
   ]
 
   const totalFields = requiredFields.length
@@ -96,7 +109,7 @@ const CourseIdPage = async ({
               <IconBadge icon={ListChecks} />
               <h2 className="text-xl">Course chapters</h2>
             </div>
-            <div className="">TODO: Add chapters here</div>
+            <ChaptersForm initialData={course} />
           </div>
 
           <div className="">
