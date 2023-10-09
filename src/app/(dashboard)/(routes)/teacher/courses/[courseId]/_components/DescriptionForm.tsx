@@ -75,7 +75,7 @@ const DescriptionForm = (props: DescriptionFormProps) => {
       onError: () => {
         toast({
           description: 'Error',
-          title: 'Something went wrong.',
+          title: 'Something went wrong. Please try again.',
           variant: 'destructive',
           duration: 4000,
           draggable: true,

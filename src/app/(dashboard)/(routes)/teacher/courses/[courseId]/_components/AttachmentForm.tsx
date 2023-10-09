@@ -43,7 +43,7 @@ const AttachmentForm = (props: ImageFormProps) => {
       onSuccess: () => {
         router.refresh()
         toast({
-          description: 'Course updated',
+          description: 'Course updated.',
           title: 'Your course has been updated successfully.',
           variant: 'success',
           duration: 4000,
@@ -51,11 +51,10 @@ const AttachmentForm = (props: ImageFormProps) => {
         })
         handleToggle()
       },
-      onError: (error) => {
-        console.log(error)
+      onError: () => {
         toast({
-          description: 'Error',
-          title: 'Something went wrong.',
+          description: 'Could not update course.',
+          title: 'Something went wrong. Please try again.',
           variant: 'destructive',
           duration: 4000,
           draggable: true,
@@ -78,19 +77,18 @@ const AttachmentForm = (props: ImageFormProps) => {
     {
       onSuccess: () => {
         toast({
-          description: 'Course updated',
-          title: 'Your course has been updated successfully.',
+          description: 'Attachment deleted.',
+          title: 'Your attachment has been deleted successfully.',
           variant: 'success',
           duration: 4000,
           draggable: true,
         })
         handleToggle()
       },
-      onError: (error) => {
-        console.log(error)
+      onError: () => {
         toast({
-          description: 'Error',
-          title: 'Something went wrong.',
+          description: 'Could not delete attachment.',
+          title: 'Something went wrong. Please try again.',
           variant: 'destructive',
           duration: 4000,
           draggable: true,

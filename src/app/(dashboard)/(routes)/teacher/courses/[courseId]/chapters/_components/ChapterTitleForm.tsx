@@ -1,7 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Course } from '@prisma/client'
+import { Chapter } from '@prisma/client'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import { Pencil } from 'lucide-react'
@@ -24,17 +24,17 @@ import {
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
 
-type TitleFormProps = {
-  initialData: Course
+type ChapterTitleFormProps = {
+  initialData: Chapter
+  courseId: string
+  chapterId: string
 }
 
 const formSchema = z.object({
-  title: z.string().min(3, {
-    message: 'Title is required',
-  }),
+  title: z.string().min(3),
 })
 
-const TitleForm = (props: TitleFormProps) => {
+const ChapterTitleForm = (props: ChapterTitleFormProps) => {
   const router = useRouter()
   const { toast } = useToast()
 
@@ -51,10 +51,10 @@ const TitleForm = (props: TitleFormProps) => {
 
   const { isValid } = form.formState
 
-  const { mutate: updateCourse, isLoading } = useMutation(
+  const { mutate: updateChapter, isLoading } = useMutation(
     async (values: z.infer<typeof formSchema>) => {
       const { data } = await axios.patch(
-        `/api/courses/${props.initialData?.id}`,
+        `/api/courses/${props.courseId}/chapters/${props.chapterId}`,
         values,
       )
       return data
@@ -63,7 +63,7 @@ const TitleForm = (props: TitleFormProps) => {
       onSuccess: () => {
         router.refresh()
         toast({
-          title: 'Course updated',
+          title: 'Chapter updated',
           description: 'Your course has been updated successfully.',
           variant: 'success',
           duration: 4000,
@@ -71,9 +71,10 @@ const TitleForm = (props: TitleFormProps) => {
         })
         handleToggle()
       },
-      onError: () => {
+      onError: (error) => {
+        console.log(error)
         toast({
-          title: 'Error',
+          title: 'Chapter could not be updated',
           description: 'Something went wrong. Please try again.',
           variant: 'destructive',
           duration: 4000,
@@ -84,13 +85,13 @@ const TitleForm = (props: TitleFormProps) => {
   )
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    updateCourse(values)
+    updateChapter(values)
   }
 
   return (
     <div className="mt-6 rounded-md bg-slate-100/70 p-4">
       <div className="flex items-center justify-between font-medium">
-        Course title
+        Chapter title
         <Button variant="ghost" onClick={handleToggle}>
           {isEditing ? (
             <>Cancel</>
@@ -117,12 +118,12 @@ const TitleForm = (props: TitleFormProps) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    What would you like to rename your course?
+                    What would you like to rename this chapter to?
                   </FormLabel>
                   <FormControl>
                     <Input
                       disabled={isLoading || !isEditing}
-                      placeholder="e.g. 'Advanced web development'"
+                      placeholder="e.g. 'Introduction to the course'"
                       {...field}
                     />
                   </FormControl>
@@ -144,4 +145,4 @@ const TitleForm = (props: TitleFormProps) => {
   )
 }
 
-export default TitleForm
+export default ChapterTitleForm
