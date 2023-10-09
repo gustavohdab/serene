@@ -84,3 +84,7 @@ body,
     @apply bg-background text-foreground;
   }
 }
+
+.ql-container {
+  @apply !text-sm;
+}

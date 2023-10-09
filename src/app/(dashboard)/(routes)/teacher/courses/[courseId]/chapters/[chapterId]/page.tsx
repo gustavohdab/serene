@@ -3,6 +3,7 @@ import { ArrowLeftIcon, LayoutDashboard } from 'lucide-react'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
+import ChapterDescriptionForm from '../_components/ChapterDescriptionForm'
 import ChapterTitleForm from '../_components/ChapterTitleForm'
 
 import IconBadge from '@/components/IconBadge'
@@ -82,6 +83,10 @@ const ChapterIdPage = async ({
             <ChapterTitleForm
               initialData={chapter}
               courseId={params.courseId}
+              chapterId={params.chapterId}
+            />
+            <ChapterDescriptionForm
+              initialData={chapter}
               chapterId={params.chapterId}
             />
           </div>
