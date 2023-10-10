@@ -1,8 +1,9 @@
 import { ClerkProvider } from '@clerk/nextjs'
-import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import './globals.css'
 
+import { ConfettiProvider } from '@/components/providers/ConfettiProvider'
 import QueryProvider from '@/components/providers/ReactQuery'
 import { Toaster } from '@/components/ui/toaster'
 
@@ -23,6 +24,7 @@ export default function RootLayout({
       <html lang="en">
         <QueryProvider>
           <body className={inter.className}>
+            <ConfettiProvider />
             {children}
             <Toaster />
           </body>
