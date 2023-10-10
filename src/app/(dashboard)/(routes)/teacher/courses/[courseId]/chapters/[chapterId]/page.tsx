@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation'
 import ChapterAccessForm from '../_components/ChapterAccessForm'
 import ChapterDescriptionForm from '../_components/ChapterDescriptionForm'
 import ChapterTitleForm from '../_components/ChapterTitleForm'
+import ChapterVideoForm from '../_components/ChapterVideoForm'
 
 import IconBadge from '@/components/IconBadge'
 import { buttonVariants } from '@/components/ui/button'
@@ -107,6 +108,11 @@ const ChapterIdPage = async ({
             <IconBadge icon={Video} />
             <h2 className="text-xl">Video</h2>
           </div>
+          <ChapterVideoForm
+            initialData={chapter}
+            courseId={params.courseId}
+            chapterId={params.chapterId}
+          />
         </div>
       </div>
     </div>
