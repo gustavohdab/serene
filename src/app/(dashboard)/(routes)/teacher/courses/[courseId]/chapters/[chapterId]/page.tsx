@@ -1,8 +1,9 @@
 import { auth } from '@clerk/nextjs'
-import { ArrowLeftIcon, LayoutDashboard } from 'lucide-react'
+import { ArrowLeftIcon, Eye, LayoutDashboard, Video } from 'lucide-react'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
+import ChapterAccessForm from '../_components/ChapterAccessForm'
 import ChapterDescriptionForm from '../_components/ChapterDescriptionForm'
 import ChapterTitleForm from '../_components/ChapterTitleForm'
 
@@ -78,7 +79,7 @@ const ChapterIdPage = async ({
           <div className="">
             <div className="flex items-center gap-x-2">
               <IconBadge icon={LayoutDashboard} />
-              <h2 className="text-lg">Customize your chapter</h2>
+              <h2 className="text-xl">Customize your chapter</h2>
             </div>
             <ChapterTitleForm
               initialData={chapter}
@@ -89,6 +90,22 @@ const ChapterIdPage = async ({
               initialData={chapter}
               chapterId={params.chapterId}
             />
+          </div>
+          <div>
+            <div className="flex items-center gap-x-2">
+              <IconBadge icon={Eye} />
+              <h2 className="text-xl">Access settings</h2>
+            </div>
+            <ChapterAccessForm
+              initialData={chapter}
+              chapterId={params.chapterId}
+            />
+          </div>
+        </div>
+        <div>
+          <div className="flex items-center gap-x-2">
+            <IconBadge icon={Video} />
+            <h2 className="text-xl">Video</h2>
           </div>
         </div>
       </div>
