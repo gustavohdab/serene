@@ -46,7 +46,7 @@ const AttachmentForm = (props: ImageFormProps) => {
           description: 'Course updated.',
           title: 'Your course has been updated successfully.',
           variant: 'success',
-          duration: 4000,
+          duration: 3000,
           draggable: true,
         })
         handleToggle()
@@ -56,7 +56,7 @@ const AttachmentForm = (props: ImageFormProps) => {
           description: 'Could not update course.',
           title: 'Something went wrong. Please try again.',
           variant: 'destructive',
-          duration: 4000,
+          duration: 3000,
           draggable: true,
         })
       },
@@ -80,7 +80,7 @@ const AttachmentForm = (props: ImageFormProps) => {
           description: 'Attachment deleted.',
           title: 'Your attachment has been deleted successfully.',
           variant: 'success',
-          duration: 4000,
+          duration: 3000,
           draggable: true,
         })
         handleToggle()
@@ -90,7 +90,7 @@ const AttachmentForm = (props: ImageFormProps) => {
           description: 'Could not delete attachment.',
           title: 'Something went wrong. Please try again.',
           variant: 'destructive',
-          duration: 4000,
+          duration: 3000,
           draggable: true,
         })
       },

@@ -66,7 +66,7 @@ const ChapterAccessForm = (props: ChapterAccessFormProps) => {
           description: 'Chapter updated',
           title: 'Your course has been updated successfully.',
           variant: 'success',
-          duration: 4000,
+          duration: 3000,
           draggable: true,
         })
         handleToggle()
@@ -76,7 +76,7 @@ const ChapterAccessForm = (props: ChapterAccessFormProps) => {
           description: 'Error',
           title: 'Something went wrong. Please try again.',
           variant: 'destructive',
-          duration: 4000,
+          duration: 3000,
           draggable: true,
         })
       },
@@ -115,7 +115,7 @@ const ChapterAccessForm = (props: ChapterAccessFormProps) => {
         >
           {props.initialData?.isFree
             ? 'This chapter is free for everyone.'
-            : 'This chapter is only available to students who have purchased the course.'}
+            : 'Paid chapter. Only students who have purchased this course can access this chapter.'}
         </p>
       )}
       {isEditing && (

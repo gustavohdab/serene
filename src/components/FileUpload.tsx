@@ -23,7 +23,7 @@ const FileUpload = ({ onChange, endpoint }: FileUploadProps) => {
           title: 'Error uploading file',
           description: error?.message,
           variant: 'destructive',
-          duration: 4000,
+          duration: 3000,
         })
       }}
     />

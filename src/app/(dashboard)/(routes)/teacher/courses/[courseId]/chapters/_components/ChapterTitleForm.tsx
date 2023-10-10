@@ -66,7 +66,7 @@ const ChapterTitleForm = (props: ChapterTitleFormProps) => {
           title: 'Chapter updated',
           description: 'Your course has been updated successfully.',
           variant: 'success',
-          duration: 4000,
+          duration: 3000,
           draggable: true,
         })
         handleToggle()
@@ -77,7 +77,7 @@ const ChapterTitleForm = (props: ChapterTitleFormProps) => {
           title: 'Chapter could not be updated',
           description: 'Something went wrong. Please try again.',
           variant: 'destructive',
-          duration: 4000,
+          duration: 3000,
           draggable: true,
         })
       },

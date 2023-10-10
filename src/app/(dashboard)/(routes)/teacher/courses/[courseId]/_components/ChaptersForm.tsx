@@ -70,7 +70,7 @@ const ChaptersForm = (props: ChaptersFormProps) => {
           description: 'Chapter created.',
           title: 'Your chapter has been created.',
           variant: 'success',
-          duration: 4000,
+          duration: 3000,
           draggable: true,
         })
         handleToggle()
@@ -80,7 +80,7 @@ const ChaptersForm = (props: ChaptersFormProps) => {
           description: 'Error',
           title: 'Something went wrong. Please try again.',
           variant: 'destructive',
-          duration: 4000,
+          duration: 3000,
           draggable: true,
         })
       },
@@ -105,7 +105,7 @@ const ChaptersForm = (props: ChaptersFormProps) => {
           title: 'Chapters reordered.',
           description: 'Your chapters have been reordered.',
           variant: 'success',
-          duration: 4000,
+          duration: 3000,
           draggable: true,
         })
       },
@@ -114,7 +114,7 @@ const ChaptersForm = (props: ChaptersFormProps) => {
           title: 'Something went wrong.',
           description: 'Could not reorder chapters. Please try again.',
           variant: 'destructive',
-          duration: 4000,
+          duration: 3000,
           draggable: true,
         })
       },

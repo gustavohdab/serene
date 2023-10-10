@@ -53,7 +53,7 @@ const CreatePage = () => {
           title: 'Course created',
           description: 'Your course has been created successfully.',
           variant: 'success',
-          duration: 4000,
+          duration: 3000,
           draggable: true,
         })
       },
@@ -62,7 +62,7 @@ const CreatePage = () => {
           title: 'An error occurred',
           description: "We couldn't create your course. Please try again.",
           variant: 'destructive',
-          duration: 4000,
+          duration: 3000,
           draggable: true,
         })
       },

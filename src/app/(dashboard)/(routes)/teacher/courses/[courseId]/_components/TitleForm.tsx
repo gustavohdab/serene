@@ -66,7 +66,7 @@ const TitleForm = (props: TitleFormProps) => {
           title: 'Course updated',
           description: 'Your course has been updated successfully.',
           variant: 'success',
-          duration: 4000,
+          duration: 3000,
           draggable: true,
         })
         handleToggle()
@@ -76,7 +76,7 @@ const TitleForm = (props: TitleFormProps) => {
           title: 'Error',
           description: 'Something went wrong. Please try again.',
           variant: 'destructive',
-          duration: 4000,
+          duration: 3000,
           draggable: true,
         })
       },

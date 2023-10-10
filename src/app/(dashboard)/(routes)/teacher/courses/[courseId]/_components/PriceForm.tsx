@@ -66,7 +66,7 @@ const PriceForm = (props: PriceFormProps) => {
           description: 'Course updated',
           title: 'Your course has been updated successfully.',
           variant: 'success',
-          duration: 4000,
+          duration: 3000,
           draggable: true,
         })
         handleToggle()
@@ -76,7 +76,7 @@ const PriceForm = (props: PriceFormProps) => {
           description: 'Error',
           title: 'Something went wrong. Please try again.',
           variant: 'destructive',
-          duration: 4000,
+          duration: 3000,
           draggable: true,
         })
       },

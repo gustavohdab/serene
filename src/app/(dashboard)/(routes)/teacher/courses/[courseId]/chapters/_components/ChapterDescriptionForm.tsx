@@ -67,7 +67,7 @@ const ChapterDescriptionForm = (props: ChapterDescriptionFormProps) => {
           description: 'Chapter updated',
           title: 'Your course has been updated successfully.',
           variant: 'success',
-          duration: 4000,
+          duration: 3000,
           draggable: true,
         })
         handleToggle()
@@ -77,7 +77,7 @@ const ChapterDescriptionForm = (props: ChapterDescriptionFormProps) => {
           description: 'Error',
           title: 'Something went wrong. Please try again.',
           variant: 'destructive',
-          duration: 4000,
+          duration: 3000,
           draggable: true,
         })
       },
