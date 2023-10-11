@@ -1,19 +1,16 @@
-generator client {
-  provider = "prisma-client-js"
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
-datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
-  // If you want to use Prisma Migrate, you will need to manually create a shadow database
-  // https://neon.tech/docs/guides/prisma-migrate#configure-a-shadow-database-for-prisma-migrate
-  // make sure to append ?connect_timeout=10 to the connection string
-  // shadowDatabaseUrl = env(“SHADOW_DATABASE_URL”)
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 model Course {
-  id          String  @id @default(cuid())
+  id          String  @id @default(uuid())
   userId      String
   title       String  @db.Text
   description String? @db.Text
@@ -24,42 +21,39 @@ model Course {
   categoryId String?
   category   Category? @relation(fields: [categoryId], references: [id])
 
-  attachments Attachment[]
   chapters    Chapter[]
+  attachments Attachment[]
   purchases   Purchase[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([categoryId], name: "categoryId")
+  @@index([categoryId])
+  @@fulltext([title])
 }
 
 model Category {
-  id   String @id @default(cuid())
-  name String @unique
-
+  id      String   @id @default(uuid())
+  name    String   @unique
   courses Course[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 model Attachment {
-  id   String @id @default(cuid())
+  id   String @id @default(uuid())
   name String
   url  String @db.Text
 
-  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
   courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([courseId], name: "courseId")
+  @@index([courseId])
 }
 
 model Chapter {
-  id          String  @id @default(cuid())
+  id          String  @id @default(uuid())
   title       String
   description String? @db.Text
   videoUrl    String? @db.Text
@@ -69,26 +63,28 @@ model Chapter {
 
   muxData MuxData?
 
-  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
   courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   userProgress UserProgress[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([courseId])
 }
 
 model MuxData {
-  id         String  @id @default(cuid())
+  id         String  @id @default(uuid())
   assetId    String
   playbackId String?
 
-  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
   chapterId String  @unique
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
 }
 
 model UserProgress {
-  id     String @id @default(cuid())
+  id     String @id @default(uuid())
   userId String
 
   chapterId String
@@ -99,25 +95,27 @@ model UserProgress {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([userId, chapterId], name: "userId_chapterId")
-  @@index([chapterId], name: "chapterId")
+  @@unique([userId, chapterId])
+  @@index([chapterId])
 }
 
 model Purchase {
-  id     String @id @default(cuid())
+  id     String @id @default(uuid())
   userId String
 
   courseId String
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @updatedAt()
+
+  @@unique([userId, courseId])
+  @@index([courseId])
 }
 
 model StripeCustomer {
-  id     String @id @default(cuid())
-  userId String @unique
-
+  id               String @id @default(uuid())
+  userId           String @unique
   stripeCustomerId String @unique
 
   createdAt DateTime @default(now())
