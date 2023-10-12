@@ -5,17 +5,17 @@ import { usePathname, useRouter } from 'next/navigation'
 
 import { cn } from '@/lib/utils'
 
-type CourseSidebarItemProps = {
-  id: string
+interface CourseSidebarItemProps {
   label: string
+  id: string
   isCompleted: boolean
   courseId: string
   isLocked: boolean
 }
 
 const CourseSidebarItem = ({
-  id,
   label,
+  id,
   isCompleted,
   courseId,
   isLocked,
@@ -35,16 +35,16 @@ const CourseSidebarItem = ({
       onClick={onClick}
       type="button"
       className={cn(
-        'flex items-center gap-x-2 pl-6 text-sm font-medium text-slate-500 transition-all hover:bg-slate-300/20 hover:text-slate-600',
-        isActive && 'bg-slate-200/20 text-slate-600 hover:text-slate-700',
+        'flex items-center gap-x-2 pl-6 text-sm font-[500] text-slate-500 transition-all hover:bg-slate-300/20 hover:text-slate-600',
+        isActive &&
+          'bg-slate-200/20 text-slate-700 hover:bg-slate-200/20 hover:text-slate-700',
         isCompleted && 'text-emerald-700 hover:text-emerald-700',
-        isCompleted &&
-          isActive &&
-          'bg-emerald-200/20 text-emerald-700 hover:text-emerald-700',
+        isCompleted && isActive && 'bg-emerald-200/20',
       )}
     >
       <div className="flex items-center gap-x-2 py-4">
         <Icon
+          size={22}
           className={cn(
             'text-slate-500',
             isActive && 'text-slate-700',
@@ -59,7 +59,7 @@ const CourseSidebarItem = ({
           isActive && 'opacity-100',
           isCompleted && 'border-emerald-700',
         )}
-      ></div>
+      />
     </button>
   )
 }
